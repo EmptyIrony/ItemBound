@@ -1,5 +1,6 @@
 package me.cunzai.plugin.itembound.handler
 
+import me.cunzai.plugin.itembound.config.ConfigLoader
 import me.cunzai.plugin.itembound.data.BoundInfo
 import me.cunzai.plugin.itembound.database.ITEM_UPDATE_REDIS_CHANNEL
 import me.cunzai.plugin.itembound.database.MySQLHandler
@@ -7,10 +8,12 @@ import me.cunzai.plugin.itembound.database.redis
 import org.bukkit.inventory.ItemStack
 import taboolib.common5.util.encodeBase64
 import taboolib.expansion.submitChain
+import taboolib.module.chat.colored
 import taboolib.module.nms.ItemTag
 import taboolib.module.nms.ItemTagData
 import taboolib.module.nms.getItemTag
 import taboolib.module.nms.setItemTag
+import taboolib.platform.util.buildItem
 import taboolib.platform.util.serializeToByteArray
 import java.util.UUID
 
@@ -27,7 +30,7 @@ object BoundHandler {
         return BoundInfo(UUID.fromString(boundUuidString), bounder, versionId)
     }
 
-    fun ItemStack.setBoundInfo(boundInfo: BoundInfo): ItemStack {
+    fun ItemStack.setBoundInfo(boundInfo: BoundInfo, config: ConfigLoader.BoundConfig): ItemStack {
         val tag = getItemTag()
         val boundCompound = ItemTag()
 
@@ -37,7 +40,13 @@ object BoundHandler {
 
         tag["bound"] = boundCompound
 
-        val result = setItemTag(tag)
+        val result = if (boundInfo.versionId <= 0) {
+            buildItem(setItemTag(tag)) {
+                lore += config.bindLoreAdd.colored()
+            }
+        } else {
+            setItemTag(tag)
+        }
 
         submitChain {
             if (boundInfo.versionId <= 0) {

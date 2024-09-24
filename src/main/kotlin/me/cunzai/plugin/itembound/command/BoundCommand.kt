@@ -57,7 +57,8 @@ object BoundCommand {
             boundConfig.costConfig.take(sender)
             sender.inventory.setItemInMainHand(
                 item.setBoundInfo(
-                    BoundInfo(UUID.randomUUID(), sender.name, 0)
+                    BoundInfo(UUID.randomUUID(), sender.name, 0),
+                    boundConfig
                 )
             )
 

@@ -98,7 +98,7 @@ object RecallUI {
                 )
 
                 inventory.setItemInMainHand(
-                    element.setBoundInfo(newBoundInfo)
+                    element.setBoundInfo(newBoundInfo, boundConfig)
                 )
 
                 sendLang("recall_success")
