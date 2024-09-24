@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.function.console
+import taboolib.library.configuration.Path
 import taboolib.module.configuration.Config
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Configuration.Companion.toObject
@@ -37,9 +38,13 @@ object ConfigLoader {
     }
 
     data class BoundConfig(
+        @Path("match")
         val matchConfig: MatchConfig,
+        @Path("cost")
         val costConfig: CostConfig,
+        @Path("recall_cost")
         val recallCostConfig: CostConfig,
+        @Path("bind_lore_add")
         val bindLoreAdd: List<String>
     )
 
