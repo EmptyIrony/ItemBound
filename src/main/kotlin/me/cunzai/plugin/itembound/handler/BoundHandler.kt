@@ -15,12 +15,14 @@ import taboolib.module.nms.ItemTagData
 import taboolib.module.nms.getItemTag
 import taboolib.module.nms.setItemTag
 import taboolib.platform.util.buildItem
+import taboolib.platform.util.isAir
 import taboolib.platform.util.serializeToByteArray
 import java.util.UUID
 
 object BoundHandler {
 
     fun ItemStack.getBoundInfo(): BoundInfo? {
+        if (isAir()) return null
         val data = getItemTag()["bound"] ?: return null
         val tag = data.asCompound()
         val boundUuidString = tag["bound_uuid"]?.asString() ?: return null
@@ -69,7 +71,7 @@ object BoundHandler {
             redis.publish(ITEM_UPDATE_REDIS_CHANNEL, boundInfo.boundUuid.toString())
         }
 
-        return setItemTag(tag)
+        return result
     }
 
 }

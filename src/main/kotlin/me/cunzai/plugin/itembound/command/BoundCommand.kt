@@ -9,6 +9,7 @@ import org.bukkit.Sound
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.*
+import taboolib.module.chat.colored
 import taboolib.platform.util.isAir
 import taboolib.platform.util.sendLang
 import java.util.*
@@ -62,6 +63,11 @@ object BoundCommand {
             val alreadyBound = item.getBoundInfo()
             if (alreadyBound != null) {
                 sender.sendLang("item_has_been_bound", alreadyBound.bounder)
+                return@execute
+            }
+
+            if (item.amount > 1) {
+                sender.sendMessage("&c无法绑定堆叠物品".colored())
                 return@execute
             }
 

@@ -2,6 +2,7 @@ package me.cunzai.plugin.itembound.config
 
 import me.cunzai.plugin.itembound.util.getPoints
 import me.cunzai.plugin.itembound.util.setPoints
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common.LifeCycle
@@ -50,7 +51,8 @@ object ConfigLoader {
 
     data class MatchConfig(
         val name: String?,
-        val lore: String?
+        val lore: String?,
+        val material: Material?,
     ) {
         fun check(itemStack: ItemStack): Boolean {
             name?.apply {
@@ -58,6 +60,9 @@ object ConfigLoader {
             }
             lore?.apply {
                 if (!itemStack.hasLore(this)) return false
+            }
+            material?.apply {
+                if (itemStack.type != material) return false
             }
 
             return true
@@ -75,6 +80,7 @@ object ConfigLoader {
             points?.apply {
                 if (player.getPoints() < this) return false
             }
+
 
             return true
         }
