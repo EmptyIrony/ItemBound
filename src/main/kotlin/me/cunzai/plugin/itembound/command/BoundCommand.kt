@@ -2,6 +2,7 @@ package me.cunzai.plugin.itembound.command
 
 import me.cunzai.plugin.itembound.config.ConfigLoader
 import me.cunzai.plugin.itembound.data.BoundInfo
+import me.cunzai.plugin.itembound.handler.BoundHandler.getBoundInfo
 import me.cunzai.plugin.itembound.handler.BoundHandler.setBoundInfo
 import me.cunzai.plugin.itembound.ui.RecallUI
 import org.bukkit.Sound
@@ -31,6 +32,16 @@ object BoundCommand {
         }
     }
 
+    @CommandBody(permissionDefault = PermissionDefault.OP)
+    val reload = subCommand {
+        execute<CommandSender> { sender, _, _ ->
+            ConfigLoader.conifg.reload()
+            ConfigLoader.loadConfig()
+            RecallUI.config.reload()
+            sender.sendMessage("ok")
+        }
+    }
+
     @CommandBody(permissionDefault = PermissionDefault.TRUE)
     val main = mainCommand {
         execute<Player> { sender, _, _ ->
@@ -45,6 +56,12 @@ object BoundCommand {
             }
             if (boundConfig == null) {
                 sender.sendLang("can_not_bind_item")
+                return@execute
+            }
+
+            val alreadyBound = item.getBoundInfo()
+            if (alreadyBound != null) {
+                sender.sendLang("item_has_been_bound", alreadyBound.bounder)
                 return@execute
             }
 

@@ -37,7 +37,7 @@ object MySQLHandler {
             }
 
             add("item_data") {
-                type(ColumnTypeSQL.BINARY)
+                type(ColumnTypeSQL.LONGBLOB)
             }
         }
     }

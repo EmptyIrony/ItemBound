@@ -28,6 +28,7 @@ object ItemScheduler {
 
     private fun tickPlayer(player: Player) {
         for ((slot, itemStack) in player.inventory.toList().withIndex()) {
+            if (itemStack.isAir()) continue
             checkItem(itemStack) { boundInfo, reason ->
                 player.inventory.setItem(slot, null)
                 player.sendLang(
@@ -44,7 +45,6 @@ object ItemScheduler {
             throw IllegalStateException("the check task must running main thread")
         }
 
-        if (itemStack.isAir()) return
         val boundInfo = itemStack.getBoundInfo() ?: return
 
         val success = visitedBoundItem.add(boundInfo.boundUuid)

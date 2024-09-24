@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.platform.util.isAir
 import taboolib.platform.util.sendLang
 
 object BoundInterceptor {
@@ -25,6 +26,7 @@ object BoundInterceptor {
     @SubscribeEvent
     fun e(e: InventoryClickEvent) {
         e.currentItem?.let { item ->
+            if (item.isAir()) return
             val boundInfo = item.getBoundInfo() ?: return@let
             if (boundInfo.bounder != e.whoClicked.name) {
                 e.isCancelled = true

@@ -6,6 +6,7 @@ import me.cunzai.plugin.itembound.data.BoundInfo
 import me.cunzai.plugin.itembound.database.MySQLHandler
 import me.cunzai.plugin.itembound.handler.BoundHandler.getBoundInfo
 import me.cunzai.plugin.itembound.handler.BoundHandler.setBoundInfo
+import me.cunzai.plugin.itembound.util.cache
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.expansion.AsyncDispatcher
@@ -24,7 +25,7 @@ import taboolib.platform.util.sendLang
 
 object RecallUI {
 
-    @Config("recall_ui.config")
+    @Config("recall_ui.yml")
     lateinit var config: Configuration
 
     fun open(player: Player) {
@@ -97,6 +98,8 @@ object RecallUI {
                     info.versionId + 1
                 )
 
+                cache.put(newBoundInfo.boundUuid, newBoundInfo.versionId)
+
                 inventory.setItemInMainHand(
                     element.setBoundInfo(newBoundInfo, boundConfig)
                 )
@@ -116,7 +119,7 @@ object RecallUI {
                 "bounder" eq this@loadBoundIems
             }
         }.map {
-            getBinaryStream("item_data").readAllBytes().deserializeToItemStack()
+            getBlob("item_data").binaryStream.readAllBytes().deserializeToItemStack()
         }
     }
 
