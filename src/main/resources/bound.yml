@@ -1,0 +1,17 @@
+# 唯一即可
+a:
+  match:
+    # 可以都匹配也可以删掉任意一个
+    # 不要都删否则所有物品都会走这个
+    name: "匹配物品名字"
+    lore: "匹配物品lore"
+  cost:
+    # 同上 可任意删掉一个
+    coins: 100
+    points: 100
+  recall_cost:
+    # 同上 可任意删掉一个
+    coins: 100
+    points: 100
+  bind_lore_add:
+    - "绑定者: {0}"

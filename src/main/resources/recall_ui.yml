@@ -1,0 +1,23 @@
+title: "召回中心"
+format:
+  "#########"
+  "#@@@@@@@#"
+  "#@@@@@@@#"
+  "#@@@@@@@#"
+  "###<#>###"
+placeholder:
+  material: STONE
+  name: "&c&l"
+recall:
+  lore_add:
+    - ""
+    - "&7找回花费: "
+    - "%cost%"
+    - ""
+    - "&e点击召回"
+next_page:
+  material: ARROW
+  name: "&c下一页"
+previous_page:
+  material: ARROW
+  name: "&a上一页"

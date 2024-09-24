@@ -1,0 +1,14 @@
+clear_item_owner_recall: "&c{0} &c物品已被物品主人 &e{0}&c 强制收回."
+clear_item_duplicate: "&c{0} &c重复, 已被强制收回"
+
+bind_air: "&c你不能绑定空气"
+can_not_bind_item: "&c这个物品不能被绑定"
+no_money: "&c你没有足够的货币"
+bind_success: "&a绑定成功!"
+
+item_has_been_bound: "&c这个物品已经被绑定, 绑定人: &e{0}"
+
+recall_success: "&a召回成功"
+
+cost_coins: "{0} 金币"
+cost_points: "{0} 点券"
