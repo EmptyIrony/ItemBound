@@ -4,7 +4,8 @@ a:
     # 可以都匹配也可以删掉任意一个
     # 不要都删否则所有物品都会走这个
     name: "匹配物品名字"
-    material: STONE
+    material:
+      - STONE
     lore: "匹配物品lore"
   cost:
     # 同上 可任意删掉一个

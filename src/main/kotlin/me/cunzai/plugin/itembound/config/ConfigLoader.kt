@@ -52,7 +52,7 @@ object ConfigLoader {
     data class MatchConfig(
         val name: String?,
         val lore: String?,
-        val material: Material?,
+        val material: MutableList<Material>?,
     ) {
         fun check(itemStack: ItemStack): Boolean {
             name?.apply {
@@ -62,7 +62,7 @@ object ConfigLoader {
                 if (!itemStack.hasLore(this)) return false
             }
             material?.apply {
-                if (itemStack.type != material) return false
+                if (material.contains(itemStack.type)) return false
             }
 
             return true

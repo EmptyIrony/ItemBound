@@ -44,7 +44,6 @@ object RecallUI {
 
     private suspend fun Player.openUI(items: List<ItemStack>) = withContext(SyncDispatcher) {
         openMenu<PageableChest<ItemStack>>(title = config.getStringColored("title")!!) {
-            virtualize()
             map(*config.getStringList("format").toTypedArray())
             set('#', config.getItemStack("placeholder")!!) {
                 isCancelled = true
