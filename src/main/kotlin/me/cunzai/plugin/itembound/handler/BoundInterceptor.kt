@@ -2,6 +2,7 @@ package me.cunzai.plugin.itembound.handler
 
 import me.cunzai.plugin.itembound.handler.BoundHandler.getBoundInfo
 import org.bukkit.event.Event
+import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -13,6 +14,7 @@ object BoundInterceptor {
 
     @SubscribeEvent
     fun e(e: PlayerInteractEvent) {
+        if (e.player.hasPermission("bound.admin")) return
         val itemStack = e.item ?: return
         val boundInfo = itemStack.getBoundInfo() ?: return
         if (boundInfo.bounder != e.player.name) {
@@ -24,26 +26,16 @@ object BoundInterceptor {
     }
 
     @SubscribeEvent
-    fun e(e: InventoryClickEvent) {
-        e.currentItem?.let { item ->
-            if (item.isAir()) return
-            val boundInfo = item.getBoundInfo() ?: return@let
-            if (boundInfo.bounder != e.whoClicked.name) {
-                e.isCancelled = true
-                e.whoClicked.sendLang("item_has_been_bound", boundInfo.bounder)
-                return@let
-            }
-        }
+    fun e(e: EntityPickupItemEvent) {
+        if (e.entity.hasPermission("bound.admin")) return
 
-        if (e.click == ClickType.NUMBER_KEY) {
-            val hotbarButton = e.hotbarButton
-            val item = e.whoClicked.inventory.getItem(hotbarButton)
-            val boundInfo = item?.getBoundInfo() ?: return
-            if (boundInfo.bounder != e.whoClicked.name) {
-                e.whoClicked.sendLang("item_has_been_bound", boundInfo.bounder)
-                e.isCancelled = true
-                return
-            }
+        val itemStack = e.item.itemStack
+
+        val boundInfo = itemStack.getBoundInfo() ?: return
+        if (boundInfo.bounder != e.entity.name) {
+            e.isCancelled = true
+            e.entity.sendLang("item_has_been_bound", boundInfo.bounder)
+            return
         }
 
     }

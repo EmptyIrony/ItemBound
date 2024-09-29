@@ -1,6 +1,7 @@
 package me.cunzai.plugin.itembound.scheduler
 
 import me.cunzai.plugin.itembound.data.BoundInfo
+import me.cunzai.plugin.itembound.database.MySQLHandler
 import me.cunzai.plugin.itembound.handler.BoundHandler.getBoundInfo
 import me.cunzai.plugin.itembound.util.cache
 import net.minecraft.world.entity.Entity.RemovalReason
@@ -13,6 +14,7 @@ import taboolib.module.nms.getName
 import taboolib.platform.util.isAir
 import taboolib.platform.util.onlinePlayers
 import taboolib.platform.util.sendLang
+import taboolib.platform.util.serializeToByteArray
 import java.util.UUID
 
 object ItemScheduler {
@@ -68,8 +70,21 @@ object ItemScheduler {
             return
         }
 
-        if (boundInfo.versionId != ifPresent) {
+        if (boundInfo.versionId != ifPresent.second) {
             removeBlock(boundInfo, RemoveReason.VERSION_NOT_MATCHED)
+            return
+        }
+
+        if (itemStack != ifPresent.first) {
+            cache.invalidate(boundInfo.boundUuid)
+            submitAsync {
+                MySQLHandler.table.update(MySQLHandler.datasource) {
+                    set("item_data", itemStack.serializeToByteArray())
+                    where {
+                        "bound_uuid" eq boundInfo.boundUuid.toString()
+                    }
+                }
+            }
         }
     }
 

@@ -64,7 +64,7 @@ object ConfigLoader {
             material?.apply {
                 val typeName = itemStack.type.name
                 val passed = material.any {
-                    it.contains(typeName)
+                    typeName.contains(it)
                 }
                 if (!passed) return false
             }

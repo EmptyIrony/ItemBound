@@ -97,7 +97,7 @@ object RecallUI {
                     info.versionId + 1
                 )
 
-                cache.put(newBoundInfo.boundUuid, newBoundInfo.versionId)
+                cache.put(newBoundInfo.boundUuid, element to newBoundInfo.versionId)
 
                 inventory.setItemInMainHand(
                     element.setBoundInfo(newBoundInfo, boundConfig)
