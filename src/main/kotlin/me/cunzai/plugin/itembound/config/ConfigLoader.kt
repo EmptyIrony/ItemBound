@@ -62,7 +62,11 @@ object ConfigLoader {
                 if (!itemStack.hasLore(this)) return false
             }
             material?.apply {
-                if (material.contains(itemStack.type.name)) return false
+                val typeName = itemStack.type.name
+                val passed = material.any {
+                    it.contains(typeName)
+                }
+                if (!passed) return false
             }
 
             return true
