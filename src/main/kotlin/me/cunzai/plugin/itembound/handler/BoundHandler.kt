@@ -33,6 +33,13 @@ object BoundHandler {
         return BoundInfo(UUID.fromString(boundUuidString), bounder, versionId)
     }
 
+    fun ItemStack.removeBoundInfo(): ItemStack {
+        val tag = getItemTag()
+        tag.remove("bound")
+
+        return setItemTag(tag)
+    }
+
     fun ItemStack.setBoundInfo(boundInfo: BoundInfo, config: ConfigLoader.BoundConfig): ItemStack {
         val tag = getItemTag()
         val boundCompound = ItemTag()

@@ -2,14 +2,18 @@ package me.cunzai.plugin.itembound.command
 
 import me.cunzai.plugin.itembound.config.ConfigLoader
 import me.cunzai.plugin.itembound.data.BoundInfo
+import me.cunzai.plugin.itembound.database.MySQLHandler
 import me.cunzai.plugin.itembound.handler.BoundHandler.getBoundInfo
+import me.cunzai.plugin.itembound.handler.BoundHandler.removeBoundInfo
 import me.cunzai.plugin.itembound.handler.BoundHandler.setBoundInfo
 import me.cunzai.plugin.itembound.ui.RecallUI
+import me.cunzai.plugin.itembound.util.cache
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.*
+import taboolib.common.platform.function.submitAsync
 import taboolib.module.chat.colored
 import taboolib.platform.util.isAir
 import taboolib.platform.util.sendLang
@@ -30,6 +34,21 @@ object BoundCommand {
         dynamic("玩家名") {
             execute<Player> { sender, _, argument ->
                 sender.bindItem(argument)
+            }
+        }
+    }
+
+    @CommandBody(permission = "bound.admin")
+    val adminUnbind = subCommand {
+        execute<Player> { sender, _, argument ->
+            val item = sender.inventory.itemInMainHand
+            if (item.isAir()) return@execute
+
+            val boundInfo = item.getBoundInfo() ?: return@execute
+            sender.inventory.setItemInMainHand(item.removeBoundInfo())
+            submitAsync {
+                MySQLHandler.delete(boundInfo.boundUuid)
+                cache.invalidate(boundInfo)
             }
         }
     }

@@ -8,6 +8,7 @@ import taboolib.module.database.ColumnTypeSQL
 import taboolib.module.database.Index
 import taboolib.module.database.Table
 import taboolib.module.database.getHost
+import java.util.UUID
 
 object MySQLHandler {
 
@@ -48,6 +49,14 @@ object MySQLHandler {
             createTable(checkExists = true)
             createIndex(Index(("idx_bound_uuid"), listOf("bound_uuid"), checkExists = true))
         }.run()
+    }
+
+    fun delete(uuid: UUID) {
+        table.delete(datasource) {
+            where {
+                "bound_uuid" eq uuid.toString()
+            }
+        }
     }
 
 }
