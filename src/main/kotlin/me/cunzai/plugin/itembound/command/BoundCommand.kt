@@ -14,7 +14,9 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.*
 import taboolib.common.platform.function.submitAsync
+import taboolib.common5.util.replace
 import taboolib.module.chat.colored
+import taboolib.platform.util.buildItem
 import taboolib.platform.util.isAir
 import taboolib.platform.util.sendLang
 import java.util.*
@@ -45,7 +47,15 @@ object BoundCommand {
             if (item.isAir()) return@execute
 
             val boundInfo = item.getBoundInfo() ?: return@execute
-            sender.inventory.setItemInMainHand(item.removeBoundInfo())
+            val config =
+                ConfigLoader.boundConfigs.firstOrNull { conf -> conf.matchConfig.check(item) } ?: return@execute
+
+            sender.inventory.setItemInMainHand(
+                buildItem(item) {
+                    lore -= config.bindLoreAdd.replace("{0}" to boundInfo.bounder).toSet()
+                }.removeBoundInfo()
+            )
+
             submitAsync {
                 MySQLHandler.delete(boundInfo.boundUuid)
                 cache.invalidate(boundInfo)
