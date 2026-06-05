@@ -1,5 +1,6 @@
 clear_item_owner_recall: "&c{0} &c物品已被物品主人 &e{0}&c 强制收回."
 clear_item_duplicate: "&c{0} &c重复, 已被强制收回"
+clear_item_has_been_bound: "&c{0} 物品已被 {1} 绑定, 已收回"
 
 bind_air: "&c你不能绑定空气"
 can_not_bind_item: "&c这个物品不能被绑定"

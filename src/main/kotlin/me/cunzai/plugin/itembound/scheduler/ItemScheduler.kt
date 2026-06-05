@@ -4,9 +4,9 @@ import me.cunzai.plugin.itembound.data.BoundInfo
 import me.cunzai.plugin.itembound.database.MySQLHandler
 import me.cunzai.plugin.itembound.handler.BoundHandler.getBoundInfo
 import me.cunzai.plugin.itembound.util.cache
-import net.minecraft.world.entity.Entity.RemovalReason
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.Schedule
 import taboolib.common.platform.function.submitAsync
@@ -30,30 +30,28 @@ object ItemScheduler {
 
     private fun tickPlayer(player: Player) {
         for ((slot, itemStack) in player.inventory.toList().withIndex()) {
-            if (itemStack.isAir()) continue
-            checkItem(itemStack) { boundInfo, reason ->
-                player.inventory.setItem(slot, null)
-                player.sendLang(
-                    "clear_item_${reason.langNode}",
-                    itemStack.getName(),
-                    boundInfo.bounder,
-                )
-            }
+            player.inventory.tickItem(slot, itemStack, player)
         }
     }
 
-    private fun checkItem(itemStack: ItemStack, removeBlock: (BoundInfo, RemoveReason) -> Unit) {
+    private fun Inventory.tickItem(slot: Int, item: ItemStack, player: Player) {
+        if (item.isAir()) return
+        checkItem(player, item) { boundInfo, reason ->
+            setItem(slot, null)
+            player.sendLang(
+                "clear_item_${reason.langNode}",
+                item.getName(),
+                boundInfo.bounder,
+            )
+        }
+    }
+
+    private fun checkItem(player: Player, itemStack: ItemStack, removeBlock: (BoundInfo, RemoveReason) -> Unit) {
         if (!Bukkit.isPrimaryThread()) {
             throw IllegalStateException("the check task must running main thread")
         }
 
         val boundInfo = itemStack.getBoundInfo() ?: return
-
-        val success = visitedBoundItem.add(boundInfo.boundUuid)
-        if (!success) {
-            removeBlock(boundInfo, RemoveReason.DUPLICATE)
-            return
-        }
 
         // try load from local cache
         val ifPresent = cache.getIfPresent(boundInfo.boundUuid)
@@ -75,6 +73,17 @@ object ItemScheduler {
             return
         }
 
+        if (!player.hasPermission("bound.admin") && boundInfo.bounder != player.name) {
+            removeBlock(boundInfo, RemoveReason.OWNER_NOT_MATCHED)
+            return
+        }
+
+        val success = visitedBoundItem.add(boundInfo.boundUuid)
+        if (!success) {
+            removeBlock(boundInfo, RemoveReason.DUPLICATE)
+            return
+        }
+
         if (itemStack != ifPresent.first) {
             cache.invalidate(boundInfo.boundUuid)
             submitAsync {
@@ -89,7 +98,8 @@ object ItemScheduler {
     }
 
     enum class RemoveReason(val langNode: String) {
-        DUPLICATE("duplicate"), VERSION_NOT_MATCHED("owner_recall")
+        DUPLICATE("duplicate"), VERSION_NOT_MATCHED("owner_recall"),
+        OWNER_NOT_MATCHED("has_been_bound")
     }
 
 }

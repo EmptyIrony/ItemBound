@@ -51,10 +51,7 @@ object BoundHandler {
         tag["bound"] = boundCompound
 
         val result = if (boundInfo.versionId <= 0) {
-            buildItem(setItemTag(tag)) {
-                lore += config.bindLoreAdd.colored()
-                    .replace("{0}" to boundInfo.bounder)
-            }
+            setItemTag(tag)
         } else {
             setItemTag(tag)
         }

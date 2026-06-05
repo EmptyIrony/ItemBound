@@ -51,9 +51,7 @@ object BoundCommand {
                 ConfigLoader.boundConfigs.firstOrNull { conf -> conf.matchConfig.check(item) } ?: return@execute
 
             sender.inventory.setItemInMainHand(
-                buildItem(item) {
-                    lore -= config.bindLoreAdd.replace("{0}" to boundInfo.bounder).toSet()
-                }.removeBoundInfo()
+                item.removeBoundInfo()
             )
 
             submitAsync {

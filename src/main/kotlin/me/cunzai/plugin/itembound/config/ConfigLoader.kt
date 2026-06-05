@@ -9,6 +9,7 @@ import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.function.console
 import taboolib.library.configuration.Path
+import taboolib.module.chat.colored
 import taboolib.module.configuration.Config
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Configuration.Companion.toObject
@@ -56,10 +57,10 @@ object ConfigLoader {
     ) {
         fun check(itemStack: ItemStack): Boolean {
             name?.apply {
-                if (!itemStack.hasName(this)) return false
+                if (!itemStack.hasName(this.colored())) return false
             }
             lore?.apply {
-                if (!itemStack.hasLore(this)) return false
+                if (!itemStack.hasLore(this.colored())) return false
             }
             material?.apply {
                 val typeName = itemStack.type.name

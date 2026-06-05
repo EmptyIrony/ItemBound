@@ -84,12 +84,12 @@ object RecallUI {
                     it.matchConfig.check(element)
                 } ?: return@onClick
 
-                if (!boundConfig.costConfig.check(this@openUI)) {
+                if (!boundConfig.recallCostConfig.check(this@openUI)) {
                     sendLang("no_money")
                     return@onClick
                 }
 
-                boundConfig.costConfig.take(this@openUI)
+                boundConfig.recallCostConfig.take(this@openUI)
                 val info = element.getBoundInfo()!!
                 val newBoundInfo = BoundInfo(
                     info.boundUuid,
@@ -97,11 +97,10 @@ object RecallUI {
                     info.versionId + 1
                 )
 
-                cache.put(newBoundInfo.boundUuid, element to newBoundInfo.versionId)
+                val recalledItem = element.setBoundInfo(newBoundInfo, boundConfig)
+                cache.put(newBoundInfo.boundUuid, recalledItem to newBoundInfo.versionId)
 
-                inventory.setItemInMainHand(
-                    element.setBoundInfo(newBoundInfo, boundConfig)
-                )
+                inventory.addItem(recalledItem)
 
                 sendLang("recall_success")
             }

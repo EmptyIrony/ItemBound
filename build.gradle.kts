@@ -8,13 +8,13 @@ import io.izzel.taboolib.gradle.BukkitHook
 import io.izzel.taboolib.gradle.BukkitNMS
 import io.izzel.taboolib.gradle.BukkitNMSUtil
 import io.izzel.taboolib.gradle.BukkitNMSItemTag
-import io.izzel.taboolib.gradle.DatabaseAlkaidRedis
+import io.izzel.taboolib.gradle.AlkaidRedis
 import io.izzel.taboolib.gradle.Database
 
 
 plugins {
     java
-    id("io.izzel.taboolib") version "2.0.18"
+    id("io.izzel.taboolib") version "2.0.37"
     id("org.jetbrains.kotlin.jvm") version "1.8.22"
 }
 
@@ -28,7 +28,7 @@ taboolib {
         install(BukkitNMS)
         install(BukkitNMSUtil)
         install(BukkitNMSItemTag)
-        install(DatabaseAlkaidRedis)
+        install(AlkaidRedis)
         install(Database)
     }
     description {
@@ -37,7 +37,7 @@ taboolib {
             name("存在")
         }
     }
-    version { taboolib = "6.2.0-beta14" }
+    version { taboolib = "6.3.0-932e79c" }
 }
 
 repositories {
@@ -46,8 +46,8 @@ repositories {
 
 dependencies {
     compileOnly("com.google.guava:guava:33.3.1-jre")
-    compileOnly("ink.ptms.core:v12004:12004:mapped")
-    compileOnly("ink.ptms.core:v12004:12004:universal")
+    compileOnly("ink.ptms.core:v12105:12105:mapped")
+    compileOnly("ink.ptms.core:v12105:12105:universal")
     compileOnly(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
 }

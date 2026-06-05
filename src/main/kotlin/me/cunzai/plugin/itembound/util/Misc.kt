@@ -5,6 +5,7 @@ import com.google.common.cache.CacheLoader
 import com.google.common.cache.LoadingCache
 import me.cunzai.plugin.itembound.database.MySQLHandler
 import org.black_ixx.playerpoints.PlayerPoints
+import org.black_ixx.playerpoints.PlayerPointsAPI
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.platform.util.deserializeToItemStack
@@ -29,7 +30,7 @@ val cache: LoadingCache<UUID, Pair<ItemStack, Int>> = CacheBuilder.newBuilder()
 
 
 fun Player.getPoints(): Int {
-    return PlayerPoints.getInstance().api.look(this.uniqueId)
+    return PlayerPoints.getInstance().api.look(uniqueId)
 }
 
 fun Player.setPoints(value: Int) {
